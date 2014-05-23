@@ -85,7 +85,6 @@ class Query
 
     public function get()
     {
-        // dd($this->buildQuery());
         if ($this->buildQuery() == null) {
             return $this->client->get($this->buildUrl())->json();
         }
