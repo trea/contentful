@@ -12,6 +12,11 @@ class ContentfulServiceProvider extends ServiceProvider
      */
     protected $defer = false;
 
+    public function boot()
+    {
+        $this->package('trea/contentful');
+    }
+
     /**
      * Register the service provider.
      *
@@ -21,8 +26,17 @@ class ContentfulServiceProvider extends ServiceProvider
     {
         $this->package('trea/contentful');
         
-        $this->app->bind('contentful', function () {
 
+        $this->app['contentful'] = $this->app->share(function ($app) {
+            $config = $app->make('config');
+            $cache = $app->make('cache');
+
+            return new Contentful(
+                $config->get('contentful::API_BASE', 'https://cdn.contentful.com'),
+                $config->get('contentful::SPACE_KEY'),
+                $config->get('contentful::ACCESS_TOKEN'),
+                $cache
+            );
         });
     }
 
